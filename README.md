@@ -1,35 +1,17 @@
-# Sui dApp Starter Template
+# Sui Magic 8 Ball (Client-Only)
 
-This dApp was created using `@mysten/create-dapp` that sets up a basic React
-Client dApp using the following tools:
+This is a **React-based Magic 8 Ball app** that uses the **Slush Wallet** to sign messages and generate 8-ball responses
 
-- [React](https://react.dev/) as the UI framework
-- [TypeScript](https://www.typescriptlang.org/) for type checking
-- [Vite](https://vitejs.dev/) for build tooling
-- [Radix UI](https://www.radix-ui.com/) for pre-built UI components
-- [ESLint](https://eslint.org/)
-- [`@mysten/dapp-kit`](https://sdk.mystenlabs.com/dapp-kit) for connecting to
-  wallets and loading data
-- [pnpm](https://pnpm.io/) for package management
+> Its a **fully client-side** application. There is **no Move contract**, no on-chain logic, and no backend. All behavior is local and deterministic based on signature data.
 
-## Starting your dApp
+## Features
 
-To install dependencies you can run
+- Magic 8 Ball experience powered by your own Slush wallet signature
+- No transaction submission or on-chain storage
 
-```bash
-pnpm install
-```
+##  How it works
 
-To start your dApp in development mode run
-
-```bash
-pnpm dev
-```
-
-## Building
-
-To build your app for deployment you can run
-
-```bash
-pnpm build
-```
+1. You type in a question.
+2. Your Slush wallet signs a message containing that question and a timestamp.
+3. The app hashes your signature to select aresponse from a predefined list.
+4. The answer is revealed with a magic-ball animation.
