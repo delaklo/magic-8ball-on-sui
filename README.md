@@ -13,5 +13,5 @@ This is a **React-based Magic 8 Ball app** that uses the **Slush Wallet** to sig
 
 1. You type in a question.
 2. Your Slush wallet signs a message containing that question and a timestamp.
-3. The app hashes your signature to select aresponse from a predefined list.
+3. The app hashes your signature to select a response from a predefined list.
 4. The answer is revealed with a magic-ball animation.
