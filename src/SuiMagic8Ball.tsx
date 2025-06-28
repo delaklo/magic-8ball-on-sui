@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import {
   ConnectButton,
   useCurrentAccount,
@@ -32,8 +32,8 @@ const responses = [
   "Very doubtful",
 ];
 
-const generateRandomFromSignature = (signature) => {
-  const hexString = Array.from(signature, (byte) =>
+const generateRandomFromSignature = (signature: Uint8Array): number => {
+  const hexString = Array.from(signature, (byte: number) =>
     ("0" + (byte & 0xff).toString(16)).slice(-2),
   ).join("");
   const hexSegment = hexString.substring(0, 8);
@@ -42,30 +42,37 @@ const generateRandomFromSignature = (signature) => {
   return randomSeed % responses.length;
 };
 
+
+
+
 export default function SuiMagic8Ball() {
-  const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState("Ask and sign to reveal");
+  const [question, setQuestion] = useState<string>("");
+  const [answer, setAnswer] = useState<string>("Ask and sign to reveal");
   const [isShaking, setIsShaking] = useState(false);
   const [isAsking, setIsAsking] = useState(false);
-  const [status, setStatus] = useState({
+  const [status, setStatus] = useState<{ message: string; type: "success" | "error" | "info"; isVisible: boolean }>({
     message: "",
-    type: "",
-    visible: false,
+    type: "info",
+
+    isVisible: false,
   });
   const [signatureDetails, setSignatureDetails] = useState({
     message: "",
     signature: "",
     responseIndex: 0,
-    visible: false,
+    isVisible: false,
   });
+
+
 
   const currentAccount = useCurrentAccount();
   const { mutate: signPersonalMessage } = useSignPersonalMessage();
-  const showStatus = useCallback((message, type) => {
-    setStatus({ message, type, visible: true });
+
+  const showStatus = useCallback((message: string, type: "success" | "error" | "info") => {
+    setStatus({ message, type, isVisible: true });
     if (type === "success" || type === "info") {
       setTimeout(
-        () => setStatus((prev) => ({ ...prev, visible: false })),
+        () => setStatus((prev) => ({ ...prev, isVisible: false })),
         5000,
       );
     }
@@ -92,20 +99,22 @@ export default function SuiMagic8Ball() {
         {
           onSuccess: (result) => {
             try {
+               const signatureBytes = new Uint8Array(
+                result.signature.match(/.{1,2}/g)?.map(byte => parseInt(byte, 16)) || []
+              );
+              
               const responseIndex = generateRandomFromSignature(
-                result.signature,
+                signatureBytes,
               );
               const selectedAnswer = responses[responseIndex];
 
-              const signatureHex = Array.from(result.signature, (byte) =>
-                ("0" + (byte & 0xff).toString(16)).slice(-2),
-              ).join("");
+              const signatureHex = result.signature;
 
               setSignatureDetails({
                 message,
                 signature: signatureHex,
                 responseIndex,
-                visible: true,
+                isVisible: true,
               });
 
               setTimeout(() => {
@@ -117,11 +126,13 @@ export default function SuiMagic8Ball() {
             } catch (err) {
               console.error(err);
               setIsShaking(false);
-              setAnswer("Error occurred");
+              setAnswer("Error occrred");
               showStatus("Error processing signature", "error");
               setIsAsking(false);
             }
           },
+
+
           onError: (err) => {
             console.error(err);
             setIsShaking(false);
@@ -135,19 +146,19 @@ export default function SuiMagic8Ball() {
       console.error(err);
       setIsShaking(false);
       setAnswer("Error occurred");
-      showStatus(`Error: ${err.message}`, "error");
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      showStatus(`Error: ${errorMessage}`, "error");
       setIsAsking(false);
     }
   }, [question, currentAccount, signPersonalMessage, showStatus]);
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = (e: { key: string; }) => {
     if (e.key === "Enter" && !isAsking) askMagic8Ball();
   };
 
   const handleBallClick = () => {
     if (!isAsking && question.trim()) askMagic8Ball();
   };
-
   return (
     <div className="container">
       <h1 className="title">Magic 8 Ball</h1>
@@ -156,7 +167,10 @@ export default function SuiMagic8Ball() {
       </div>
 
       <div className="wallet-section">
+
         <ConnectButton />
+
+        
         {currentAccount && (
           <div className="account-info">
             <strong>Connected:</strong>

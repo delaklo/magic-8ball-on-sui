@@ -1,11 +1,12 @@
-import React from "react";
+interface MagicBallProps {
+  answer: string;
+  isShaking: boolean;
+  onClick: () => void;
+}
 
-export default function MagicBall({ answer, isShaking, onClick }) {
+export default function MagicBall({ answer, isShaking, onClick }: MagicBallProps) {
   return (
-    <div
-      className={`magic-ball ${isShaking ? "shaking" : ""}`}
-      onClick={onClick}
-    >
+    <div onClick={onClick} className={`magic-ball ${isShaking ? "shaking" : ""}`}>
       <div className="ball-window">{answer}</div>
     </div>
   );
