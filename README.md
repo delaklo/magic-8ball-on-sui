@@ -7,6 +7,10 @@ sign messages and generate 8-ball responses
 > on-chain logic, and no backend. All behavior is local and deterministic based
 > on signature data.
 
+It's deployed on Github Pages: https://delaklo.github.io/magic-8ball-on-sui/
+
+Article on Medium about it: https://medium.com/@delaklovp/sui-developing-1-magic-8-ball-app-with-usesignpersonalmessage-hook-3327d2afa293
+
 ## Features
 
 - Magic 8 Ball experience powered by your own Slush wallet signature

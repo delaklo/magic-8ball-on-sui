@@ -210,6 +210,8 @@ export default function SuiMagic8Ball() {
       )}
       <StatusMessage {...status} />
       <SignatureDetails {...signatureDetails} />
+      <br/>
+      <div>Created by stransey.sui</div>
     </div>
   );
 }
